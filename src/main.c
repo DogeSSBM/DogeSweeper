@@ -1,4 +1,4 @@
-#include "./DogeLib/Includes.h"
+#include "DogeLib/Includes.h"
 
 int main(int argc, char const *argv[])
 {

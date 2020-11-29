@@ -2,4 +2,4 @@
 printf "\033c"
 libraries="-lSDL2 -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lSDL2_net -lm"
 flags="-O3 -Winline"
-gcc main.c $libraries $flags -o main.out
+gcc src/main.c $libraries $flags -o main.out

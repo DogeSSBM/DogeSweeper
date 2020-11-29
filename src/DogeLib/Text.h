@@ -75,7 +75,7 @@ void setFontSize(int size)
 	if(gfx.font != NULL)
 		TTF_CloseFont(gfx.font);
 	gfx.fontSize = size;
-	gfx.font = TTF_OpenFont("./DogeLib/LiberationMono.ttf", gfx.fontSize);
+	gfx.font = TTF_OpenFont("src/DogeLib/LiberationMono.ttf", gfx.fontSize);
 }
 
 void setFontColor(Color c)
