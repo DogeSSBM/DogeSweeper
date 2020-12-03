@@ -1,6 +1,44 @@
 #pragma once
 
-void events(const Ticks frameEnd)
+typedef struct EventHandler{
+	EventType type;
+	EventCallback callback;
+	struct EventHandler *next;
+}EventHandler;
+
+EventHandler* appendEventHandler(EventHandler *list, EventHandler *handler)
+{
+	EventHandler *current = list;
+	while(current->next != NULL){
+		current = current->next;
+	}
+	current->next = handler;
+	return list;
+}
+
+EventHandler* registerEvent(EventHandler *handlerList, EventType type, EventCallback callback)
+{
+	EventHandler *handler = malloc(sizeof(EventHandler));
+	handler->type = type;
+	handler->callback = callback;
+	handler->next = NULL;
+	if(handlerList == NULL)
+		return handler;
+	return appendEventHandler(handlerList, handler);
+}
+
+void handleEvent(EventHandler *handlerList, Event event)
+{
+	EventHandler *current = handlerList;
+	while(current != NULL){
+		if(event.type == current->type){
+			(*current->callback)(event);
+		}
+		current = current->next;
+	}
+}
+
+void events(const Ticks frameEnd, EventHandler *handlerList)
 {
 	i32 ticksLeft = frameEnd - getTicks();
 	do{
@@ -13,12 +51,13 @@ void events(const Ticks frameEnd)
 			exit(0);
 			break;
 		case SDL_KEYDOWN:
-			switch (event.key.keysym.sym) {
-			case SDLK_ESCAPE:
+			if(event.key.keysym.sym == SDLK_ESCAPE){
 				printf("Quitting now!\n");
 				exit(0);
 				break;
 			}
+		default:
+			handleEvent(handlerList, event);
 			break;
 		}
 		ticksLeft = frameEnd - getTicks();

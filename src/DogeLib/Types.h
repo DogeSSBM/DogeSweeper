@@ -37,6 +37,7 @@ typedef int64_t			i64;
 #define ZFLOOR(n)			((n)<0?    0:(n))
 
 typedef SDL_Event			Event;
+typedef SDL_EventType		EventType;
 typedef SDL_Rect 			Rect;
 typedef SDL_Color 		Color;
 typedef SDL_Surface 		Img;
@@ -46,8 +47,9 @@ typedef SDL_BlendMode		BlendMode;
 #define BLEND_ALPHA		SDL_BLENDMODE_BLEND
 #define BLEND_ADD			SDL_BLENDMODE_ADD
 #define BLEND_MOD			SDL_BLENDMODE_MOD
-
 #define PI				M_PI
+
+typedef void (*EventCallback)(Event);
 
 typedef enum{
 	FULLSCREEN	=		SDL_WINDOW_FULLSCREEN,
