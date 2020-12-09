@@ -26,20 +26,6 @@ Coord drawTextCoord(const Coord pos, const char *text)
 	return ret;
 }
 
-Coord drawTextLineCoord(const Coord pos, const char *text)
-{
-	Rect r;
-	r.x = pos.x; r.y = pos.y;
-	SDL_Surface *surface = TTF_RenderText_Solid(gfx.font, text, gfx.fontColor);
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(gfx.renderer, surface);
-	SDL_QueryTexture(texture, NULL, NULL, &r.w, &r.h);
-	SDL_RenderCopy(gfx.renderer, texture, NULL, &r);
-	SDL_FreeSurface(surface);
-	SDL_DestroyTexture(texture);
-	const Coord ret = {pos.x, pos.y+r.h};
-	return ret;
-}
-
 void drawTextCentered(uint x, uint y, const char *text)
 {
 	Rect r;
@@ -75,7 +61,7 @@ void setFontSize(int size)
 	if(gfx.font != NULL)
 		TTF_CloseFont(gfx.font);
 	gfx.fontSize = size;
-	gfx.font = TTF_OpenFont("src/DogeLib/LiberationMono.ttf", gfx.fontSize);
+	gfx.font = TTF_OpenFont("./LiberationMono.ttf", gfx.fontSize);
 }
 
 void setFontColor(Color c)
