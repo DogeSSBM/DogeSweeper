@@ -26,6 +26,8 @@ void fillBoard(Board *board)
 	}
 }
 
+// void plantMines()
+
 void printBoardBombs(Board board)
 {
 	printf("Dimensions (%3u, %3u)\n", board.len.x, board.len.y);
@@ -91,12 +93,12 @@ int main(int argc, char const *argv[])
 
 	switch (argc) {
 		case 5:
-			board.scale = wrap(strToInt(argv[4]),1,200);
+			board.scale = clamp(strToInt(argv[4]),1,200);
 		case 4:
-			board.numMines = wrap(strToInt(argv[3]),1,200);
+			board.numMines = clamp(strToInt(argv[3]),1,200);
 		case 3:
-			board.len.x = wrap(strToInt(argv[2]),1,200);
-			board.len.y = wrap(strToInt(argv[1]),1,200);
+			board.len.x = clamp(strToInt(argv[2]),1,200);
+			board.len.y = clamp(strToInt(argv[1]),1,200);
 	}
 
 	Length window = coordMul(board.len, board.scale);
