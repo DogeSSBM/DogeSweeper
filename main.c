@@ -60,6 +60,7 @@ void printBoardBombs(const Board board)
 {
 	printf("Dimensions (%3u, %3u)\n", board.len.x, board.len.y);
 	printf("Bombs %4u\n", board.numMines);
+	printf("Tiles %4u\n", board.numTile);
 	for(uint y = 0; y < board.len.y; y++){
 		for(uint x = 0; x < board.len.x; x++){
 			if(board.tile[x][y].isClicked)
@@ -199,6 +200,7 @@ int main(int argc, char const *argv[])
 			if(mousePressed(MOUSE_L)){
 				if(board.tile[tpos.x][tpos.y].isBomb||board.numTile==0)
 					plantMines(&board, tpos);
+				board.numTile--;
 				board.tile[tpos.x][tpos.y].isClicked = true;
 				board.tile[tpos.x][tpos.y].mark = calcNum(board, tpos);
 				printBoardBombs(board);
