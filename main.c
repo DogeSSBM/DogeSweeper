@@ -77,8 +77,8 @@ void printBoardBombs(const Board board)
 void drawTile(const Board board, const Coord tpos)
 {
 	const uint outline = board.scale/10;
-	const Coord wpos = {tpos.x*board.scale, tpos.y*board.scale};
-	const Coord mpos = coordAdd(wpos, board.scale);
+	const Coord wpos = coordMul(tpos, board.scale);
+	const Coord mpos = coordAdd(wpos, board.scale/2);
 	char text[2] = " ";
 	setFontSize(board.scale/2);
 
@@ -89,19 +89,19 @@ void drawTile(const Board board, const Coord tpos)
 	setRGB(0xBD, 0xBD, 0xBD);
 	if(!board.tile[tpos.x][tpos.y].isClicked){
 		fillSquareCoord(coordAdd(wpos, outline),board.scale-2*outline);
-		if(board.tile[tpos.x][tpos.y].mark > 0){
-			setFontColor(PINK);
-			text[0] = board.tile[tpos.x][tpos.y].mark+'0';
-		}
+	}
+	if(board.tile[tpos.x][tpos.y].mark > 0){
+		setFontColor(PINK);
+		intToStr(board.tile[tpos.x][tpos.y].mark, text);
 	}else{
 		switch(board.tile[tpos.x][tpos.y].mark){
 		case M_QUES:
 			setFontColor(BLACK);
-			text[0] = '?';
+			strcpy(text,  "?");
 			break;
 		case M_FLAG:
 			setFontColor(RED);
-			text[0] = 'F';
+			strcpy(text,  "F");
 			break;
 		default:
 			break;
@@ -206,6 +206,9 @@ int main(int argc, char const *argv[])
 				printBoardBombs(board);
 			}
 		}
+
+		setFontColor(BLUE);
+		drawTextCenteredCoord(mouse.pos, "Hewwoooo?~");
 
 		draw();
 		events(frameStart + TPF);
