@@ -78,9 +78,9 @@ void drawTile(const Board board, const Coord tpos)
 {
 	const uint outline = board.scale/10;
 	const Coord wpos = coordMul(tpos, board.scale);
-	const Coord mpos = coordAdd(wpos, board.scale/2);
+	const Coord npos = coordShift(wpos, DIR_R, (outline*5)/2);
 	char text[2] = " ";
-	setFontSize(board.scale/2);
+	setFontSize(board.scale);
 
 	setRGB(0xFF, 0xFF, 0xFF);
 	fillSquareCoord(wpos, board.scale);
@@ -107,7 +107,7 @@ void drawTile(const Board board, const Coord tpos)
 			break;
 		}
 	}
-	drawTextCoord(mpos, text);
+	drawTextCoord(npos, text);
 }
 
 void drawBoard(const Board board)
@@ -143,17 +143,27 @@ Coord wposAt(const Coord tpos, const Board board)
 uint calcNum(const Board board, const Coord pos)
 {
 	uint count = 0;
-	for(uint i = 0; i < 8; i++){
-		const Coord n = coordShift(
-			i<4 ? pos : coordShift(pos, dirROR(i%4), 1),
+	printf("calcNum at (%3u,%3u)\n", pos.x, pos.y);
+	for(uint i = 0; i < 4; i++){
+		const Coord d1 = coordShift(pos, i, 1);
+		if(coordInRangePair(
+			d1,(RangePair){(Range){0,board.len.x},(Range){0,board.len.y}}
+		)){count += board.tile[d1.x][d1.y].isBomb;}
+
+		const Coord d2 = coordShift(coordShift(pos, i, 1), dirROR(i), 1);
+		if(coordInRangePair(
+			d2,(RangePair){(Range){0,board.len.x},(Range){0,board.len.y}}
+		)){count += board.tile[d2.x][d2.y].isBomb;}
+		printf(
+			"\ti=%d\td1=(%3u,%3u)\td2=(%3u,%3u)\n",
 			i,
-			1
+			d1.x,
+			d1.y,
+			d2.x,
+			d2.y
 		);
-		if(n.x >= 0 && n.y >= 0 &&
-		n.x < board.len.x && n.y < board.len.y){
-			count += board.tile[n.x][n.y].isBomb;
-		}
 	}
+	putchar('\n');
 	return count;
 }
 
@@ -161,6 +171,7 @@ uint calcNum(const Board board, const Coord pos)
 // xlen ylen nummines scale
 int main(int argc, char const *argv[])
 {
+	char buffer[40] = {0};
 	Board board = {
 		.len = (Length){30, 16},
 		.scale = 40,
@@ -207,8 +218,15 @@ int main(int argc, char const *argv[])
 			}
 		}
 
-		setFontColor(BLUE);
-		drawTextCenteredCoord(mouse.pos, "Hewwoooo?~");
+		if(mouseState(MOUSE_R)){
+
+			setFontSize(board.scale);
+			setFontColor(BLUE);
+			sprintf(buffer, "(%3u,%3u)", mouse.pos.x, mouse.pos.y);
+			drawTextCoord(coordShift(mouse.pos,DIR_U,board.scale*2),buffer);
+			sprintf(buffer, "(%3u,%3u)", tpos.x, tpos.y);
+			drawTextCoord(coordShift(mouse.pos,DIR_U,board.scale),buffer);
+		}
 
 		draw();
 		events(frameStart + TPF);
